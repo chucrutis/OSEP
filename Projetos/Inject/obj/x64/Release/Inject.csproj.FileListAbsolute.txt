@@ -1,0 +1,8 @@
+\\VBOXSVR\Público\OSEP\Projetos\Inject\bin\x64\Release\Inject.exe.config
+\\VBOXSVR\Público\OSEP\Projetos\Inject\bin\x64\Release\Inject.exe
+\\VBOXSVR\Público\OSEP\Projetos\Inject\bin\x64\Release\Inject.pdb
+\\VBOXSVR\Público\OSEP\Projetos\Inject\obj\x64\Release\Inject.csproj.AssemblyReference.cache
+\\VBOXSVR\Público\OSEP\Projetos\Inject\obj\x64\Release\Inject.csproj.SuggestedBindingRedirects.cache
+\\VBOXSVR\Público\OSEP\Projetos\Inject\obj\x64\Release\Inject.csproj.CoreCompileInputs.cache
+\\VBOXSVR\Público\OSEP\Projetos\Inject\obj\x64\Release\Inject.exe
+\\VBOXSVR\Público\OSEP\Projetos\Inject\obj\x64\Release\Inject.pdb
