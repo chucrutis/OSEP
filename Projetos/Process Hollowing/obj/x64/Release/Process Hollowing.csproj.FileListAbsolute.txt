@@ -1,0 +1,8 @@
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\bin\x64\Release\Process Hollowing.exe.config
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\bin\x64\Release\Process Hollowing.exe
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\bin\x64\Release\Process Hollowing.pdb
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\obj\x64\Release\Process Hollowing.csproj.AssemblyReference.cache
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\obj\x64\Release\Process Hollowing.csproj.SuggestedBindingRedirects.cache
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\obj\x64\Release\Process Hollowing.csproj.CoreCompileInputs.cache
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\obj\x64\Release\Process Hollowing.exe
+\\VBOXSVR\Público\OSEP\Projetos\Process Hollowing\obj\x64\Release\Process Hollowing.pdb
