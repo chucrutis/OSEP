@@ -1,3 +1,18 @@
+# Sumário
+
+- [Sumário](#sumário)
+- [Migração ou Injeção de Processo](#migração-ou-injeção-de-processo)
+  - [Explicação das API's que serão utilizadas](#explicação-das-apis-que-serão-utilizadas)
+  - [Injeção do shellcode em outro processo](#injeção-do-shellcode-em-outro-processo)
+- [Injeção de DLL](#injeção-de-dll)
+  - [API utilizada](#api-utilizada)
+  - [Explicação](#explicação)
+  - [Código em C#](#código-em-c)
+- [Técnica "Process Hollowing"](#técnica-process-hollowing)
+  - [API's utilizadas](#apis-utilizadas)
+  - [Explicação](#explicação-1)
+  - [Código em C#](#código-em-c-1)
+
 # Migração ou Injeção de Processo
 
 * Quando obtermos o shell reverso de uma aplicação podem ocorrer algums situações inesperadas como: 

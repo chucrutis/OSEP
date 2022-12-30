@@ -1,3 +1,14 @@
+# Sumário
+
+- [Sumário](#sumário)
+- [Script inicial para execução automática](#script-inicial-para-execução-automática)
+- [Execução de programas](#execução-de-programas)
+- [Comunicação com API do Windows](#comunicação-com-api-do-windows)
+  - [Diferenciação entre Excel 64 bit e Excel 32 bit](#diferenciação-entre-excel-64-bit-e-excel-32-bit)
+  - [Integração com a API do Windows](#integração-com-a-api-do-windows)
+  - [Execução de shellcode](#execução-de-shellcode)
+
+
 # Script inicial para execução automática
 
 ```vbnet
